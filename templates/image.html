@@ -1,2 +1,2 @@
-<img src="{{ url }}">
-<script>location.reload();</script>
+<img id="{{ ID }}" src="{{ url }}">
+<script>var element = document.getElementById("{{ ID }}");element.parentNode.removeChild(element);</script>

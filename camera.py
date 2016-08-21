@@ -11,7 +11,7 @@ class VideoCamera(object):
     
     def get_frame(self):
         success, image = self.video.read()
-        ret, jpeg = cv2.imencode('.jpg', image)
+        ret, jpeg = cv2.imencode('.jpeg', image)
         jpeg = base64.b64encode(jpeg)
         return jpeg
     def stream(self, server, channel):
@@ -21,4 +21,4 @@ class VideoCamera(object):
             data = dict(content=frame, channel=channel)
             r = requests.post(url, data=data, allow_redirects=True)
 vid = VideoCamera()
-vid.stream('0.0.0.0:9400', '1')
+vid.stream('0.0.0.0:9400', '1') #162.243.6.91:9400
