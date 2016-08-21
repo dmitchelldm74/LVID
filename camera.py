@@ -1,13 +1,9 @@
 import cv2
-
+import requests
+import base64
 class VideoCamera(object):
     def __init__(self):
-        # Using OpenCV to capture from device 0. If you have trouble capturing
-        # from a webcam, comment the line below out and use a video file
-        # instead.
         self.video = cv2.VideoCapture(0)
-        # If you decide to use video.mp4, you must have this file in the folder
-        # as the main.py.
         # self.video = cv2.VideoCapture('video.mp4')
     
     def __del__(self):
@@ -15,8 +11,14 @@ class VideoCamera(object):
     
     def get_frame(self):
         success, image = self.video.read()
-        # We are using Motion JPEG, but OpenCV defaults to capture raw images,
-        # so we must encode it into JPEG in order to correctly display the
-        # video stream.
         ret, jpeg = cv2.imencode('.jpg', image)
-        return jpeg.tobytes()
+        jpeg = base64.b64encode(jpeg)
+        return jpeg
+    def stream(self, server, channel):
+        while True:
+            frame = self.get_frame()
+            url = 'http://' + server + '/upload'
+            data = dict(content=frame, channel=channel)
+            r = requests.post(url, data=data, allow_redirects=True)
+vid = VideoCamera()
+vid.stream('0.0.0.0:9400', '1')
